@@ -68,7 +68,8 @@ matches = [
         ('a*', 'a'),
         ('a*', 'aaa'),
         ('a*a','aaa'),
-        ('ab*a*c*a','aaa')
+        ('a*c*a','a'),
+        ('ab*a*c*a','aaa'),
         ('a*b', 'aaab'),
         ('a*b', 'b'),
         ('.*', 'abcdefg'),
