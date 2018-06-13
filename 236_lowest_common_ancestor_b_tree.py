@@ -16,28 +16,12 @@ class Solution:
         :type q: TreeNode
         :rtype: TreeNode
         """
-        p_path, q_path = self.get_path(root,p,[])[1][::-1], self.get_path(root,q,[])[1][::-1]
-        i = 0
-        while i < len(p_path) and i < len(q_path) and p_path[i].val == q_path[i].val:
-            i += 1
-        return p_path[i - 1]
-
-
-    def get_path(self,root,node,path=[]):
-        if root is None:
-            return (False, path)
-        elif root.val == node.val:
-            path.append(root)
-            return (True, path)
-        l, r = self.get_path(root.left,node,path), self.get_path(root.right,node,path)
-        if l[0] or r[0]:
-            path.append(root)
-            return (True, path)
-        return (False, path)
-
-
-
-
+        if root is None: return None
+        if root is q or root is p: return root
+        l,r = self.lowestCommonAncestor(root.left,p,q), self.lowestCommonAncestor(root.right,p,q)
+        if l and r: return root
+        if not l and not r: return None
+        return l if l else r
 
 s = Solution()
 
@@ -59,4 +43,4 @@ t = TreeNode(3,
             TreeNode(0),
             TreeNode(8)))
 
-print(s.lowestCommonAncestor(t,t.left,t.left.right.right))
+print(s.lowestCommonAncestor(t,t.left,t.left.right))
