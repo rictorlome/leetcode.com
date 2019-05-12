@@ -4,36 +4,39 @@ class Solution(object):
         :type dominoes: str
         :rtype: str
         """
-        fallen = ""
-        for idx, domino in enumerate(dominoes):
-            fall = domino
-            if domino == ".":
-                lpush_d = self.l_push_distance(idx, dominoes)
-                rpush_d = self.r_push_distance(idx, dominoes)
-                if lpush_d < rpush_d:
-                    fall = "R"
-                elif rpush_d < lpush_d:
-                    fall = "L"
-                else:
-                    fall = "."
-            fallen += fall
-        return fallen
+        r_forces, l_forces = [], []
+        max_force = len(dominoes)
+        current_force = 0
+        for domino in dominoes:
+            if domino == "R":
+                current_force = max_force
+            if domino == "L":
+                current_force = 0
+            r_forces.append(current_force)
+            if current_force > 0:
+                current_force -= 1
 
-    def l_push_distance(self, idx, dominoes):
-        for i in range(idx-1, -1, -1):
-            if dominoes[i] == "L":
-                break
-            if dominoes[i] == "R":
-                return idx - i
-        return float("inf")
+        current_force = 0
+        for domino in dominoes[::-1]:
+            if domino == "L":
+                current_force = -max_force
+            if domino == "R":
+                current_force = 0
+            l_forces.append(current_force)
+            if current_force < 0:
+                current_force += 1
 
-    def r_push_distance(self, idx, dominoes):
-        for i in range(idx+1, len(dominoes)):
-            if dominoes[i] == "R":
-                break
-            if dominoes[i] == "L":
-                return i - idx
-        return float("inf")
+        l_forces = l_forces[::-1]
+        d = [self.to_letter(r_forces[i] + l_forces[i])
+             for i in range(len(dominoes))]
+        return "".join(d)
+
+    def to_letter(self, num):
+        if num < 0:
+            return "L"
+        if num > 0:
+            return "R"
+        return "."
 
     tests = [
         (".L.R...LR..L..", "LL.RR.LLRRLL.."),
